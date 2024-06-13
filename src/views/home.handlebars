@@ -1,0 +1,92 @@
+<!-- home.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+        <link rel="stylesheet" href="/styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1 class="T">Agregar Productos</h1>
+    <div id="productForm">
+        <!-- Agrega campos para ingresar detalles del nuevo producto -->
+        <input type="text" id="title" placeholder="Titulo" >
+        <input type="text" id="description" placeholder="Descripcion" >
+        <input type="text" id="code" placeholder="Code" >
+        <input type="number" id="price" placeholder="Precio" >
+        <input type="number" id="stock" placeholder="Stock" >
+        <input type="text" id="category" placeholder="Categoria" >
+        <button id="addProductBtn">Agregar Producto</button>
+    </div>
+    <h1 class="S">Lista de Productos</h1>
+    <button id="deleteProduct">Limpiar Lista</button>
+    <ul id="productList">
+        <!-- La lista de productos se actualizará dinámicamente aquí -->
+    </ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io();
+            let productIdCounter = 1; // Inicializar el contador de IDs
+
+            // Escuchar evento de WebSocket para actualizar la lista de productos
+            socket.on('productos', (productos) => {
+                const productList = document.getElementById('productList');
+                productList.innerHTML = '';
+                productos.forEach(producto => {
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${producto.id} - Titulo:${producto.title} - Descripcion:${producto.description} -Precio: $${producto.price}`;
+                    productList.appendChild(li);
+                });
+            });
+
+            // Escuchar evento de clic del botón para agregar productos
+            document.getElementById('addProductBtn').addEventListener("click", () => {
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const code = document.getElementById('code').value;
+                const price = document.getElementById('price').value;
+                const stock = document.getElementById('stock').value;
+                const category = document.getElementById('category').value;
+
+                // Obtener el ID único para el nuevo producto
+                const productId = productIdCounter++;
+
+                // Crear un objeto con los datos del nuevo producto
+                const newProduct = {
+                    id: productId,
+                    title: title,
+                    description: description,
+                    code: code,
+                    price: price,
+                    stock: stock,
+                    category: category
+                };
+
+                // Enviar el nuevo producto al servidor a través de WebSocket
+                socket.emit('nuevoProducto', newProduct);
+
+                // Limpiar los campos del formulario después de enviar los datos
+                document.getElementById('title').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('code').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('stock').value = '';
+                document.getElementById('category').value = '';
+            });
+
+            // Escuchar evento de clic del botón para limpiar la lista
+            document.getElementById('deleteProduct').addEventListener("click", () => {
+                // Limpiar la lista en el cliente
+                const productList = document.getElementById('productList');
+                productList.innerHTML = '';
+
+                // Enviar una señal al servidor para que elimine todos los productos
+                socket.emit('limpiarProductos');
+            });
+        });
+    </script>
+</body>
+</html>

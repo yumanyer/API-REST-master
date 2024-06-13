@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.T{
+    display: flex;
+    justify-content: center;
+    margin: 25px;
+}
+
+
+#productForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.S{
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+}

@@ -1,4 +1,3 @@
-// src/controllers/userController.js
 import { userModel } from '../models/user.model.js';
 import { generateToken } from '../utils/passport.config.js';
 import bcrypt from 'bcrypt';

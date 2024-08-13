@@ -1,4 +1,3 @@
-// src/routes/users.routes.js
 import express from 'express';
 import { registerUser, loginUser } from '../controllers/userController.js';
 import passport from 'passport';

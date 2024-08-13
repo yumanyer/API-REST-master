@@ -29,8 +29,8 @@ export const initializePassport = (passport) => {
 
     // Estrategia de login (Local Strategy)
     passport.use('local', new LocalStrategy({
-        usernameField: 'email', // Usa el campo email como nombre de usuario
-        passwordField: 'password', // Usa el campo password como contraseña
+        usernameField: 'email', 
+        passwordField: 'password', 
     }, async (email, password, done) => {
         try {
             const user = await userModel.findOne({ email });
@@ -51,7 +51,7 @@ export const initializePassport = (passport) => {
 // Funciones para generar y verificar tokens
 export function generateToken(payload) {
     const token = jwt.sign(payload, JWT_SECRET, {
-        expiresIn: "2m" // El token expira en 2 minutos
+        expiresIn: "2m" 
     });
     return token;
 }

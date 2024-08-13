@@ -17,9 +17,22 @@
     align-items: center;
     gap: 10px;
 }
-
+.btn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
 .S{
     display: flex;
     justify-content: center;
     padding-top: 15px;
+}
+
+
+#productList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Crea tres columnas con el mismo ancho */
+    grid-gap: 8px; 
+    justify-items: center;
 }

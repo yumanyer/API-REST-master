@@ -30,7 +30,7 @@ export const initializePassport = (passport) => {
 
     // Estrategia de registro
     passport.use('register', new LocalStrategy({
-        passReqToCallback: true, // Para obtener el request en el callback
+        passReqToCallback: true, //  obtengo el request en el callback
         usernameField: 'email',
         passwordField: 'password'
     }, async (req, email, password, done) => {
@@ -41,8 +41,7 @@ export const initializePassport = (passport) => {
             }
 
             // Hashear la contraseña
-            const hashedPassword = await createHash(password); // Asegúrate de que esta función existe
-
+            const hashedPassword = await createHash(password); 
             // Crea un nuevo usuario
             const newUser = await userModel.create({
                 first_name: req.body.first_name, 

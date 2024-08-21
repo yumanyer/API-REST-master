@@ -1,7 +1,6 @@
 import express from "express";
-import { Router } from "express";
-
-const router = Router();
+import Product from "../models/products.models.js";
+const router = express.Router();
 
 // Middleware para parsear JSON en el cuerpo de las solicitudes
 router.use(express.json());

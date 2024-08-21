@@ -40,8 +40,6 @@ export const initializePassport = (passport) => {
                 return done(null, false, { message: 'El email ya está en uso.' });
             }
 
-            // Hashear la contraseña
-            const hashedPassword = await createHash(password); // Asegúrate de que esta función existe
 
             // Crea un nuevo usuario
             const newUser = await userModel.create({

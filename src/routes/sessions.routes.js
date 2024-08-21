@@ -30,7 +30,7 @@ export const initializePassport = (passport) => {
 
     // Estrategia de registro
     passport.use('register', new LocalStrategy({
-        passReqToCallback: true, // Para obtener el request en el callback
+        passReqToCallback: true, //  obtengo el request en el callback
         usernameField: 'email',
         passwordField: 'password'
     }, async (req, email, password, done) => {
@@ -39,6 +39,8 @@ export const initializePassport = (passport) => {
             if (existingUser) {
                 return done(null, false, { message: 'El email ya está en uso.' });
             }
+
+
 
 
             // Crea un nuevo usuario

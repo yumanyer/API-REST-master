@@ -12,7 +12,7 @@ import productsRouter from "./routes/products.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import sessionsRouter from "./routes/sessions.routes.js";
 import usersRouter from "./routes/users.routes.js";
-import { initializePassport } from './utils/passport.config.js';
+import { initializePassport } from './config/passport.config.js';
 
 const app = express();
 initializePassport(passport);

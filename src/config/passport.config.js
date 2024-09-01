@@ -2,7 +2,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import jwt from 'jsonwebtoken';
 import { userModel } from '../models/user.model.js';
-import { createHash, veryfyPassword } from '../utils/hashFunction.js';
+import {  veryfyPassword } from '../utils/hashFunction.js';
 
 const JWT_SECRET = "s3cr3t";
 

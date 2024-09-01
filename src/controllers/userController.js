@@ -1,5 +1,5 @@
 import { userModel } from '../models/user.model.js';
-import { generateToken } from '../utils/passport.config.js';
+import { generateToken } from '../config/passport.config.js';
 import bcrypt from 'bcrypt';
 import { veryfyPassword } from '../utils/hashFunction.js';
 

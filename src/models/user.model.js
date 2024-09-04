@@ -1,14 +1,14 @@
-import mongoose,{ Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { createHash } from "../utils/hashFunction.js";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     age: { type: Number, required: true },
     password: { type: String, required: true },
-    cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-    role: { type: String, default: 'user' }
+    cart: { type: Schema.Types.ObjectId, ref: 'Cart' },
+    role: { type: String, enum: ["admin", "user"], required: true } 
 });
 
 // middleware de mongoose
@@ -36,4 +36,4 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
-export const userModel = model('user', userSchema);
+export const User = model('user', userSchema);

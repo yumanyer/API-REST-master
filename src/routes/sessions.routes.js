@@ -1,78 +1,42 @@
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import LocalStrategy from 'passport-local';
-import jwt from 'jsonwebtoken';
-import { userModel } from '../models/user.model.js';
-import { createHash } from "../utils/hashFunction.js";
-import router from './products.routes.js';
+import express from "express";
+import passport from "passport";
+import jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
+import { config } from "../config/config.js";
+import { authenticateUser } from "../middleware/auth.middleware.js";
 
-const JWT_SECRET = "s3cr3t";
+const router = express.Router();
 
-// Configuración de la estrategia JWT
-const opts = {
-    jwtFromRequest: ExtractJwt.fromExtractors([(req) => req.cookies.jwt]), // Extrae el token de la cookie
-    secretOrKey: JWT_SECRET,
-};
-
-// Inicialización de Passport
-export const initializePassport = (passport) => {
-    // Estrategia para autenticación JWT
-    passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-        try {
-            const user = await userModel.findById(jwt_payload.id); 
-            if (user) {
-                return done(null, user);
-            }
-            return done(null, false);
-        } catch (error) {
-            return done(error, false);
-        }
-    }));
-
-    // Estrategia de registro
-    passport.use('register', new LocalStrategy({
-        passReqToCallback: true, //  obtengo el request en el callback
-        usernameField: 'email',
-        passwordField: 'password'
-    }, async (req, email, password, done) => {
-        try {
-            const existingUser = await userModel.findOne({ email });
-            if (existingUser) {
-                return done(null, false, { message: 'El email ya está en uso.' });
-            }
-
-
-
-
-            // Crea un nuevo usuario
-            const newUser = await userModel.create({
-                first_name: req.body.first_name, 
-                last_name: req.body.last_name, 
-                email,
-                age: req.body.age, 
-                password
-            });
-            return done(null, newUser);
-        } catch (error) {
-            return done(error);
-        }
-    }));
-};
-
-// Funciones para generar y verificar tokens
-export function generateToken(payload) {
-    const token = jwt.sign(payload, JWT_SECRET, {
-        expiresIn: "2m"
-    });
-    return token;
-}
-
-export function verifyToken(token) {
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        return decoded;
-    } catch (error) {
-        throw new Error(`Hubo un error: ${error}`);
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
-}
+  
+    try {
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+  
+      const isPasswordValid = await verifyPassword(password, user.password);
+  
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Contraseña incorrecta' });
+      }
+  
+      const token = jwt.sign({ id: user._id, role: user.role }, config.JWT_SECRET, { expiresIn: '2h' });
+  
+      return res.status(200).json({ message: 'Sesión iniciada', token });
+    } catch (error) {
+      return res.status(500).json({ error: 'Hubo un error', details: error.message });
+    }
+  };
 
+router.post(
+  "/register", authenticateUser, (req, res) => {
+    res.json({ message: 'Acceso autorizado', user: req.user });
+  });
 export default router;

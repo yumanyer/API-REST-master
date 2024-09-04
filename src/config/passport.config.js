@@ -1,66 +1,66 @@
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { Strategy as LocalStrategy } from 'passport-local';
-import jwt from 'jsonwebtoken';
-import { userModel } from '../models/user.model.js';
-import {  veryfyPassword } from '../utils/hashFunction.js';
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { Strategy as LocalStrategy } from "passport-local";
+import { User } from "../models/user.model.js";
+import { createHash, veryfyPassword } from "../utils/hashFunction.js";
+import { config } from "./config.js";
 
-const JWT_SECRET = "s3cr3t";
+const JWT_SECRET = config.JWT_SECRET;
 
-// Configuración de la estrategia JWT
-const opts = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del encabezado
-    secretOrKey: JWT_SECRET,
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: JWT_SECRET,
 };
 
-// Inicialización de Passport
 export const initializePassport = (passport) => {
-    // Estrategia para autenticación JWT
-    passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-        try {
-            const user = await userModel.findById(jwt_payload.id);
-            if (user) {
-                return done(null, user);
-            }
-            return done(null, false, { message: 'Usuario no encontrado' });
-        } catch (error) {
-            return done(error, false);
+  passport.use(
+    new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
+      try {
+        const user = await User.findById(jwtPayload.id);
+        if (user) {
+          return done(null, user);
         }
-    }));
+        return done(null, false, { message: "Usuario no encontrado" });
+      } catch (error) {
+        return done(error, false);
+      }
+    })
+  );
 
-    // Estrategia de login (Local Strategy)
-    passport.use('local', new LocalStrategy({
-        usernameField: 'email', 
-        passwordField: 'password', 
-    }, async (email, password, done) => {
+  passport.use(
+    "local",
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+      },
+      async (email, password, done) => {
         try {
-            const user = await userModel.findOne({ email });
-            if (!user) {
-                return done(null, false, { message: 'Usuario no encontrado' });
-            }
-            const isPasswordValid = await veryfyPassword(password, user.password);
-            if (!isPasswordValid) {
-                return done(null, false, { message: 'Contraseña incorrecta' });
-            }
-            return done(null, user);
+          const user = await User.findOne({ email });
+          if (!user) {
+            return done(null, false, { message: "Usuario no encontrado" });
+          }
+          const isPasswordValid = await veryfyPassword(password, user.password);
+          if (!isPasswordValid) {
+            return done(null, false, { message: "Contraseña incorrecta" });
+          }
+          return done(null, user);
         } catch (error) {
-            return done(error);
+          return done(error);
         }
-    }));
-}
+      }
+    )
+  );
 
-// Funciones para generar y verificar tokens
-export function generateToken(payload) {
-    const token = jwt.sign(payload, JWT_SECRET, {
-        expiresIn: "2m" 
-    });
-    return token;
-}
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
 
-export function verifyToken(token) {
+  passport.deserializeUser(async (id, done) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        return decoded;
+      const user = await User.findById(id);
+      done(null, user);
     } catch (error) {
-        throw new Error(`Hubo un error: ${error}`);
+      done(error, null);
     }
-        }
+  });
+};

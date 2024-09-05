@@ -1,5 +1,5 @@
 
-import { Product} from "../models/products.models.js";
+import { Product} from "../models/product.model.js";
 
 export async function checkStock(req, res, next) {
   const cart = req.body.cart; // Suponiendo que el carrito se envía en el cuerpo de la solicitud

@@ -33,11 +33,11 @@ mongoose.connect(config.MONGO_URI)
 
 function initApp() {
     // Configuración de Handlebars, middleware estático y rutas
+    app.use(express.json());
     app.engine('hbs', engine({ extname: 'hbs' }));
     app.set('view engine', 'hbs');
     app.set('views', path.join(getDirname(), 'views'));
     app.use(express.static(path.join(getDirname(), 'public')));
-    app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
 

@@ -24,7 +24,7 @@ export const registerUser = async (req, res) => {
     });
     console.log("Usuario creado:", newUser);
 
-    // Generar un token y enviarlo en la respuesta
+    // genero un token y lo envio en la respuesta
     const token = generateToken({ id: newUser._id });
     res
       .status(201)

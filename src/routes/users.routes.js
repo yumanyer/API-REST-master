@@ -1,6 +1,8 @@
 import express from 'express';
 import { registerUser, loginUser } from '../controllers/userController.js';
 import passport from 'passport';
+import { validateDTO } from '../middleware/validate.dto.js';
+import { userDTO } from '../dtos/user.dto.js';
 
 const router = express.Router(); 
 
@@ -8,7 +10,7 @@ const router = express.Router();
 router.use(express.json());
 
 // Ruta para registrar un nuevo usuario
-router.post('/register', registerUser);
+router.post('/register',validateDTO(userDTO), registerUser);
 
 // Ruta de login
 router.post('/login', loginUser);

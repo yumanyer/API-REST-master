@@ -1,4 +1,3 @@
-// src/controllers/product.controller.js
 import { ProductRepository } from '../repositories/product.repository.js';
 
 export class ProductController {

@@ -7,7 +7,7 @@ const ticketSchema = new Schema({
     // quantity
     amount:{ type: Number, required: true },
     // comprador
-    purschaser:{ type: Schema.Types.ObjectId,required: true, ref: "user" },
+    purchaser: { type: String, required: true },
 })
 
 // populet del comprador
@@ -18,4 +18,4 @@ ticketSchema.pre("findOne", async function(next) {
 })
 
 
-export const ticketModel = model("ticket", ticketSchema);
+export const Ticket  = model("Ticket", ticketSchema);

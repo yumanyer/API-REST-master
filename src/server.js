@@ -43,10 +43,10 @@ function initApp() {
 
     // Configuración de sesiones
     app.use(session({
-        secret: 'tu_secreto_aqui', // Cambia esto por un secreto fuerte
-        resave: false,
+        secret: 's3cr3t3', 
+        resave:false,
         saveUninitialized: true,
-        cookie: { secure: false } // Cambia a true si usas HTTPS
+        cookie: { secure: false } 
     }));
 
     app.use(passport.initialize());
@@ -87,8 +87,7 @@ function initApp() {
     });
 
     // Iniciar el servidor HTTP
-    const PORT = 5000;
-    httpServer.listen(PORT, () => {
-        console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    httpServer.listen(config.PORT, () => {
+        console.log(`Servidor corriendo en http://localhost:${config.PORT}`);
     });
 }

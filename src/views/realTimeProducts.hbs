@@ -9,25 +9,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             const socket = io();
 
-// Escuchar evento de WebSocket para actualizar la lista de productos
-socket.on('productos', (productos) => {
-    const productList = document.getElementById('productList');
-    productList.innerHTML = '';
-    productos.forEach((producto, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${index + 1} - ${producto.title} - ${producto.description} - ${producto.price}`;
-        productList.appendChild(li);
-    });
-});
+            socket.on('productos', (productos) => {
+                const productList = document.getElementById('productList');
+                productList.innerHTML = '';
+                productos.forEach((producto, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${index + 1} - ${producto.title} - ${producto.description} - $${producto.price}`;
+                    productList.appendChild(li);
+                });
+            });
         });
     </script>
 </head>
 <body>
     <h1>Lista de Productos en Tiempo Real</h1>
-    <ul id="lista-productos">
-        {{#each productos}}
-            <li>{{this.id}} - {{this.titulo}} - {{this.descripcion}} - {{this.precio}}</li>
-        {{/each}}
+    <ul id="productList">
+        <!-- Los productos se actualizarán dinámicamente aquí -->
     </ul>
 </body>
 </html>

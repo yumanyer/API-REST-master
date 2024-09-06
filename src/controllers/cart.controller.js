@@ -200,7 +200,7 @@ async purchaseCart(req, res) {
 
     await Promise.all(discountPromises);
 
-    // Calcular el monto total
+    // Calculo el monto total
     const amount = cart.products.reduce(
       (acc, item) => acc + item.quantity * (item.productId.precio || 0),
       0
@@ -214,7 +214,6 @@ async purchaseCart(req, res) {
       purchaser: req.user.email,
     });
 
-    // Actualizar el carrito del usuario para eliminar productos comprados
     cart.products = cart.products.filter(
       (item) => !productsWithoutStock.some((p) => p.productId.equals(item.productId._id))
     );

@@ -26,7 +26,6 @@ export class MailService {
         `;
         break;
 
-      // Agregar más casos según necesites
 
       default:
         body += `<p>Gracias por tu mensaje.</p>`;

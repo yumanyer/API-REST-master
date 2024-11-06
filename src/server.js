@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import { engine } from 'express-handlebars';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import dotenv from 'dotenv';
+import { Command } from 'commander';
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import sessionsRouter from './routes/sessions.routes.js';
@@ -15,9 +17,10 @@ import usersRouter from './routes/users.routes.js';
 import { initializePassport } from './config/passport.config.js';
 import { config } from './config/config.js';
 
+
+// CONFIG SERVER
 const app = express();
 initializePassport(passport);
-
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 

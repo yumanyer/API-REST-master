@@ -169,11 +169,18 @@ async purchaseCart(req, res) {
     if (!req.user || !req.user.email) {
       return res.status(400).json({ error: 'El comprador no está definido' });
     }
+    if (!cart || !cart.products || cart.products.length === 0) {
+      return res.status(404).json({ error: 'El carrito está vacío o no contiene productos válidos' });
+    }
     const productsWithoutStock = [];
 
     for (const item of cart.products) {
       const product = item.productId;
-
+      if (!product) {
+        // Si no encontramos el producto, logueamos un error
+        console.error('Producto no encontrado:', item.productId);
+        continue; // Continuamos con el siguiente producto
+      }
       if (product.stock < item.quantity) {
         productsWithoutStock.push({
           productId: product._id,

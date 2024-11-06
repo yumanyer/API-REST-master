@@ -8,8 +8,7 @@ import cookieParser from 'cookie-parser';
 import { engine } from 'express-handlebars';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import dotenv from 'dotenv';
-import { Command } from 'commander';
+import winstonLogger from './utils/logger.util.js';
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import sessionsRouter from './routes/sessions.routes.js';
@@ -43,7 +42,10 @@ function initApp() {
     app.use(express.static(path.join(getDirname(), 'public')));
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
-
+    app.use((req, res, next) => {
+        winstonLogger.http(`Solicitud HTTP: ${req.method} ${req.url}`);
+        next();
+      });
     // Configuración de sesiones
     app.use(session({
         secret: 's3cr3t3', 
@@ -60,7 +62,15 @@ function initApp() {
     app.use('/api/carts', cartsRouter);
     app.use('/api/users', usersRouter);
     app.use('/api/sessions', sessionsRouter);
+// Middleware para registrar las solicitudes HTTP
 
+  
+  // Ruta de ejemplo que genera un error
+  app.get('/api/error', (req, res) => {
+    const error = new Error('Ha ocurrido un error inesperado');
+    winstonLogger.error(`Error: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  });
     // Ruta para la página de inicio
     app.get('/', (req, res) => {
         res.render('home', { pageTitle: 'Página de Inicio' });

@@ -13,5 +13,6 @@ router.post('/', authorizeRole(['admin']),validateDTO(productDTO), productContro
 router.put('/:id', authorizeRole(['admin']),validateDTO(productDTO), productController.updateProduct.bind(productController));
 router.delete('/:id', authorizeRole(['admin']), productController.deleteProduct.bind(productController));
 router.get('/', productController.getProducts.bind(productController));
+router.post('/mocks/products/:n', authorizeRole(['admin']), productController.generateFakerProducts.bind(productController));
 
 export default router;

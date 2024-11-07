@@ -1,3 +1,4 @@
+// product.repository.js
 import { Product } from "../models/product.model.js";
 
 export class ProductRepository {

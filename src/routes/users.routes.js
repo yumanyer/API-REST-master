@@ -1,9 +1,10 @@
+// user.routes.js
 import express from 'express';
 import { registerUser, loginUser } from '../controllers/userController.js';
 import passport from 'passport';
 import { validateDTO } from '../middleware/validate.dto.js';
 import { userDTO } from '../dtos/user.dto.js';
-
+import { generateFakerUsers } from '../controllers/userController.js';
 const router = express.Router(); 
 
 // Middleware para parsear JSON en el cuerpo de las solicitudes
@@ -20,4 +21,6 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
     res.json({ status: 'success', payload: req.user });
 });
 
+router.get('/users/:n', generateFakerUsers);
+  
 export default router;

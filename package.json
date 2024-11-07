@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^9.2.0",
     "bcrypt": "^5.1.1",
     "commander": "^12.1.0",
     "cookie-parser": "^1.4.6",

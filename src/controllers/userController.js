@@ -1,7 +1,9 @@
+// userController.js
 import { User } from "../models/user.model.js";
 import { generateToken } from "../config/jwt.config.js";
-import bcrypt from "bcrypt";
 import { veryfyPassword } from "../utils/hashFunction.js";
+import { faker } from "@faker-js/faker";
+import errors  from "../utils/errors/error.js";
 
 // Registro de usuario
 export const registerUser = async (req, res) => {
@@ -37,7 +39,6 @@ export const registerUser = async (req, res) => {
     res.status(400).json({ status: "error", message: error.message });
   }
 };
-
 // Login de usuario
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -67,3 +68,39 @@ export const loginUser = async (req, res) => {
       return res.status(500).json({ error: "Hubo un error", details: error.message });
     }
   };
+
+// GENERAR USARIOS FAKER
+
+export const generateFakerUsers = async (req, res) => {
+  const { n } = req.params;
+
+  // Validar que n sea un número positivo
+  if (!n || isNaN(n) || n <= 0) {
+    return res.status(400).json({ message: "El parámetro n debe ser un número positivo." });
+  }
+
+  try {
+    const usersArray = []; 
+    for (let i = 0; i < n; i++) { // Generar n usuarios
+      const user = { 
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: `${faker.person.firstName()}${faker.person.lastName()}@soham.bio`,
+        age: faker.number.int({ min: 18, max: 70 }),
+        password: "hola1234",
+        role: faker.datatype.boolean() ? "admin" : "user",
+      };
+      usersArray.push(user); 
+    }
+    
+    // Insertar los usuarios generados en la base de datos
+    await User.insertMany(usersArray);
+    console.log("Usuarios generados:", usersArray);
+    
+    // Respuesta exitosa con los usuarios generados
+    res.json({ message: "Usuarios generados", users: usersArray });
+  } catch (error) {
+    console.error("Error generando usuarios:", error);
+    return res.status(500).json({ message: "Hubo un error al generar los usuarios", details: error.message });
+  }
+};

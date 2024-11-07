@@ -46,6 +46,7 @@ function initApp() {
         winstonLogger.http(`Solicitud HTTP: ${req.method} ${req.url}`);
         next();
       });
+    
     // Configuración de sesiones
     app.use(session({
         secret: 's3cr3t3', 
@@ -62,7 +63,8 @@ function initApp() {
     app.use('/api/carts', cartsRouter);
     app.use('/api/users', usersRouter);
     app.use('/api/sessions', sessionsRouter);
-// Middleware para registrar las solicitudes HTTP
+    app.use( '/api/mocks', usersRouter)
+    // Middleware para registrar las solicitudes HTTP
 
   
   // Ruta de ejemplo que genera un error

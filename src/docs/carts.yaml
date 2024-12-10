@@ -1,0 +1,135 @@
+paths:
+  /cart/{id}:
+    get:
+      summary: Obtener carritos
+      description: Devuelve información de un carrito específico si el usuario tiene permisos, o todos los carritos si el usuario es administrador.
+      tags:
+        - Carts
+      parameters:
+        - name: id
+          in: path
+          required: false
+          description: ID del carrito (opcional).
+          schema:
+            type: string
+      responses:
+        200:
+          description: Carrito(s) encontrado(s) con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        403:
+          description: Usuario no autorizado.
+        404:
+          description: Carrito no encontrado.
+  /cart/add-product:
+    post:
+      summary: Agregar productos al carrito
+      description: Agrega uno o más productos al carrito del usuario autenticado.
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: string
+                        description: ID del producto.
+                        example: "64b1c8f1d8e4fc45b7a2c4d3"
+                      quantity:
+                        type: integer
+                        description: Cantidad del producto.
+                        example: 2
+      responses:
+        200:
+          description: Productos agregados al carrito exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Error en los datos enviados (campos faltantes o invalidaciones).
+  /cart/{cid}/purchase:
+    post:
+      summary: Finalizar compra
+      description: Completa la compra del carrito especificado.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Compra finalizada exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Compra finalizada"
+                  ticket:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: "a8b7c6d5"
+                      purchase_datetime:
+                        type: string
+                        format: date-time
+                        example: "2024-12-10T10:30:00Z"
+                      amount:
+                        type: number
+                        example: 150.75
+                      purchaser:
+                        type: string
+                        example: "user@example.com"
+        404:
+          description: Carrito no encontrado.
+        403:
+          description: Usuario no autorizado.
+        400:
+          description: Error en los datos o stock insuficiente.
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único del carrito (generado automáticamente por MongoDB).
+          example: "64b1c8f1d8e4fc45b7a2c4d1"
+        user:
+          type: string
+          description: ID del usuario al que pertenece el carrito.
+          example: "64b1c8f1d8e4fc45b7a2c4d2"
+        products:
+          type: array
+          description: Lista de productos en el carrito.
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID del producto en el carrito.
+                example: "64b1c8f1d8e4fc45b7a2c4d3"
+              quantity:
+                type: integer
+                description: Cantidad del producto en el carrito.
+                example: 2

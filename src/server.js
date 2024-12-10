@@ -15,8 +15,7 @@ import sessionsRouter from './routes/sessions.routes.js';
 import usersRouter from './routes/users.routes.js';
 import { initializePassport } from './config/passport.config.js';
 import { config } from './config/config.js';
-
-
+import swaggerDocs from './docs/swagger.js';
 // CONFIG SERVER
 const app = express();
 initializePassport(passport);
@@ -34,6 +33,9 @@ mongoose.connect(config.MONGO_URI)
     });
 
 function initApp() {
+    // DOCUNEBTACION 
+
+    swaggerDocs(app);
     // Configuración de Handlebars, middleware estático y rutas
     app.use(express.json());
     app.engine('hbs', engine({ extname: 'hbs' }));
@@ -64,6 +66,7 @@ function initApp() {
     app.use('/api/users', usersRouter);
     app.use('/api/sessions', sessionsRouter);
     app.use( '/api/mocks', usersRouter)
+
     // Middleware para registrar las solicitudes HTTP
 
   
@@ -100,6 +103,8 @@ function initApp() {
             io.emit('productos', productos);
         });
     });
+// documentation
+
 
     // Iniciar el servidor HTTP
     httpServer.listen(config.PORT, () => {

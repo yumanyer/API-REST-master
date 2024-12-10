@@ -96,6 +96,7 @@ async deleteCart(req, res) {
       //El usario ve solo su carrito 
       else {
         const cart = await Cart.findOne({ user: req.user.id });
+
         if (!cart) {
           return res.status(404).json({ message: "Carro no encontrado" });
         }
@@ -108,7 +109,6 @@ async deleteCart(req, res) {
   // POST PRODUCT BY CART
 async addProductToCart(req, res) {
   const { products } = req.body;
-
   if (!products || !Array.isArray(products)) {
     return res.status(400).json({ message: "Todos los campos son requeridos" });
   }
@@ -136,7 +136,7 @@ async addProductToCart(req, res) {
         return res.status(400).json({ message: "Stock insuficiente para el producto", product: productId });
       }
 
-      const existingProductIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+      const existingProductIndex = cart.products.findIndex(p => p.productId === productId);
       if (existingProductIndex >= 0) {
         cart.products[existingProductIndex].quantity += quantity;
       } else {
@@ -148,7 +148,7 @@ async addProductToCart(req, res) {
 
     return res.status(200).json({ message: "Productos agregados al carrito", cart });
   } catch (error) {
-    return res.status(500).json({ error: "Hubo un error", details: error.message });
+    return res.status(500).json({ error: "Hubo un error asdasd", details: error.message });
   }
 }
 
@@ -159,7 +159,6 @@ async purchaseCart(req, res) {
     const { cid } = req.params;
 
     const cart = await Cart.findById(cid).populate('products.productId');
-
     if (!cart) {
       return res.status(404).json({ error: 'No se encontró el carrito' });
     }
@@ -208,10 +207,15 @@ async purchaseCart(req, res) {
     await Promise.all(discountPromises);
 
     // Calculo el monto total
-    const amount = cart.products.reduce(
-      (acc, item) => acc + item.quantity * (item.productId.precio || 0),
-      0
-    );
+const amount = cart.products.reduce((acc, item) => {
+  // Verifica que el precio exista
+  const price = item.productId.price || 0;
+  if (price === 0) {
+    console.warn(`Producto sin precio: ${item.productId._id}`);
+  }
+  return acc + item.quantity * price;
+}, 0);
+
 
     // Creo el ticket 
     const ticket = await Ticket.create({

@@ -1,0 +1,160 @@
+paths:
+  /products:
+    get:
+      summary: Obtener todos los productos
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Lista de productos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Error al obtener productos
+    post:
+      summary: Agregar un producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Datos inválidos
+        '500':
+          description: Error al agregar el producto
+  /products/{id}:
+    put:
+      summary: Actualizar un producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del producto a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '200':
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Datos inválidos
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error al actualizar el producto
+    delete:
+      summary: Eliminar un producto
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID del producto a eliminar
+      responses:
+        '200':
+          description: Producto eliminado correctamente
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error al eliminar el producto
+  /products/mocks/products/{n}:
+    post:
+      summary: Generar productos de prueba
+      tags:
+        - Products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: n
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+          description: Número de productos de prueba a generar
+      responses:
+        '200':
+          description: Productos generados exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '400':
+          description: Parámetro inválido
+        '500':
+          description: Error al generar productos
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto
+        code:
+          type: string
+          description: Código único del producto
+        price:
+          type: number
+          format: float
+          description: Precio del producto
+        stock:
+          type: integer
+          description: Cantidad disponible
+        category:
+          type: string
+          description: Categoría del producto
+        thumbnail:
+          type: array
+          items:
+            type: string
+          description: URLs de imágenes del producto
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

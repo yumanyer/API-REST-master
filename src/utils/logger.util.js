@@ -6,7 +6,7 @@ const {colorize, combine, timestamp, printf,simple} = format;
 // Niveles de log
 const levels ={fatal:0, error:1, info:2, http:3, };
 
-const colors = {fatal:'red', error:'yellow', info:'magenta', http:'red'};
+const colors = {fatal:'red', error:'yellow', info:'magenta', http:'green'};
 
 // configuramos los colores de los niveles
 addColors(colors);

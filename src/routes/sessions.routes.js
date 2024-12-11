@@ -11,8 +11,6 @@ router.post('/', authorizeRole(['admin']), validateDTO(cartDTO),cartController.a
 router.put('/:id', authorizeRole(['admin']),validateDTO(cartDTO), cartController.updateCart.bind(cartController));
 router.delete('/:id', authorizeRole(['admin']), cartController.deleteCart.bind(cartController));
 router.get('/:id?', cartController.getCarts.bind(cartController));
-
-// Ruta para agregar un producto al carrito
 router.post('/add-product', authorizeRole(['user']), cartController.addProductToCart.bind(cartController));
 
 export default router;

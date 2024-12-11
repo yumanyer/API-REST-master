@@ -7,8 +7,9 @@
     "start": "node ./src/server.js -p 5000 --mode=prod",
     "dev": "nodemon ./src/server.js -p 9000 --mode=dev",
     "test": "node ./src/server.js -p 8000 --mode=test",
-    "user-test": "mocha ./test/supertest --mode=test",
-    "product-test": "mocha ./test/mocha-chai --mode=test"
+    "user-test": "mocha ./test/supertest/user.test.js --mode=test",
+    "product-test": "mocha ./test/mocha-chai/products.test.js --mode=test",
+    "cart-test": "mocha ./test/mocha-chai/carts.test.js --mode=test"
   },
   "keywords": [],
   "author": "",

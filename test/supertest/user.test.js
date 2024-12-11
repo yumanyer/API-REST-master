@@ -15,7 +15,7 @@ it('debería registrar un nuevo usuario', async () => {
         email: 'john.doe@example.com',
         age: 30,
         password: 'password123',
-        role: 'user'
+        role: 'admin'
     };
 
     const respuesta = await request(app)
@@ -42,6 +42,7 @@ it('debería iniciar sesión con un usuario existente y devolver un token JWT', 
     expect(respuesta.body).to.have.property('token');  
 
     token = respuesta.body.token;  // Guardo el token para las siguientes pruebas
+    console.log("Token recibido:", token); // Verifica el token
 
 });
 
@@ -62,7 +63,7 @@ it('debería iniciar sesión con un usuario existente y devolver un token JWT', 
     expect(respuesta.body.payload).to.have.property('email').that.equals('john.doe@example.com');  
     expect(respuesta.body.payload).to.have.property('first_name').that.equals('John');  
     expect(respuesta.body.payload).to.have.property('last_name').that.equals('Doe');  
-    expect(respuesta.body.payload).to.have.property('role').that.equals('user');  
+    expect(respuesta.body.payload).to.have.property('role').that.equals('admin');  
 });
 
 });

@@ -36,7 +36,6 @@ export class ProductController {
                     thumbnail: [faker.image.avatarGitHub()]
                 };
                 productsArray.push(product);
-                console.log("Productos generados:", productsArray);
             }
             // Guardar los productos en la base de datos
             await Product.insertMany(productsArray);

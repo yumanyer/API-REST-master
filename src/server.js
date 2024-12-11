@@ -19,7 +19,7 @@ import swaggerDocs from './docs/swagger.js';
 
 
 // CONFIG SERVER
-export const app = express();
+const app = express();
 initializePassport(passport);
 const httpServer = createServer(app);
 const io = new Server(httpServer);
@@ -114,4 +114,4 @@ function initApp() {
     });
 }
 
-export default app;
+export {app};

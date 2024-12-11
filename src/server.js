@@ -16,8 +16,10 @@ import usersRouter from './routes/users.routes.js';
 import { initializePassport } from './config/passport.config.js';
 import { config } from './config/config.js';
 import swaggerDocs from './docs/swagger.js';
+
+
 // CONFIG SERVER
-const app = express();
+export const app = express();
 initializePassport(passport);
 const httpServer = createServer(app);
 const io = new Server(httpServer);
@@ -111,3 +113,5 @@ function initApp() {
         console.log(`Servidor corriendo en http://localhost:${config.PORT}`);
     });
 }
+
+export default app;

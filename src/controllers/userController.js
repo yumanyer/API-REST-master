@@ -1,7 +1,7 @@
 // userController.js
 import { User } from "../models/user.model.js";
 import { generateToken } from "../config/jwt.config.js";
-import { veryfyPassword } from "../utils/hashFunction.js";
+import { veryfyPassword,createHash } from "../utils/hashFunction.js";
 import { faker } from "@faker-js/faker";
 import errors  from "../utils/errors/error.js";
 
@@ -82,12 +82,13 @@ export const generateFakerUsers = async (req, res) => {
   try {
     const usersArray = []; 
     for (let i = 0; i < n; i++) { // Generar n usuarios
+      const hashedPassword = await createHash("hola1234")
       const user = { 
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         email: `${faker.person.firstName()}${faker.person.lastName()}@soham.bio`,
         age: faker.number.int({ min: 18, max: 70 }),
-        password: "hola1234",
+        password: hashedPassword,
         role: faker.datatype.boolean() ? "admin" : "user",
       };
       usersArray.push(user); 
@@ -95,7 +96,8 @@ export const generateFakerUsers = async (req, res) => {
     
     // Insertar los usuarios generados en la base de datos
     await User.insertMany(usersArray);
-    console.log("Usuarios generados:", usersArray);
+    // logger para ver los usarios creados
+    //console.log("Usuarios generados:", usersArray);
     
     // Respuesta exitosa con los usuarios generados
     res.json({ message: "Usuarios generados", users: usersArray });

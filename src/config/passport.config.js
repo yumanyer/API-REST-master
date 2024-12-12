@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 import { createHash, veryfyPassword } from "../utils/hashFunction.js";
 import { config } from "./config.js";
 
-const JWT_SECRET = config.JWT_SECRET;
+const JWT_SECRET = config.JWT_SECRET || "defaultSecretKey";
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
